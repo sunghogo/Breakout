@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public static event Action<int> OnScoreChanged;
     public static event Action<int> OnHighScoreChanged;
     public static event Action<int> OnLivesChanged;
+    public static event Action OnNextLevel;
     public static event Action OnGameStart;
     public static event Action OnGameOver;
     public static event Action OnScreenStart;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public bool StartingScreen { get; private set; }
     [field: SerializeField] public bool GameStart { get; private set; }
     [field: SerializeField] public bool GameOver { get; private set; }
+    [field: SerializeField] public bool ChangeLevel { get; private set; } = false;
 
     [field: Header("Properties")]
     [field: SerializeField] public int StartingLives { get; private set; } = 3;
@@ -52,6 +54,13 @@ public class GameManager : MonoBehaviour
     {
         --currentBricks;
         OnBrickDestroyed?.Invoke();
+        if (currentBricks == 0) Instance.NextLevel();
+    }
+
+    public void NextLevel()
+    {
+        ChangeLevel = true;
+        OnNextLevel?.Invoke();
     }
 
     public void IncrementScore()
@@ -89,6 +98,7 @@ public class GameManager : MonoBehaviour
         StartingScreen = false;
         GameStart = true;
         GameOver = false;
+        ChangeLevel = false;
         ResetLives();
         OnGameStart?.Invoke();
     }
@@ -98,6 +108,8 @@ public class GameManager : MonoBehaviour
         StartingScreen = false;
         GameStart = false;
         GameOver = true;
+        ChangeLevel = false;
+
         if (Score > HighScore)
         {
             UpdateHighScore();
@@ -111,6 +123,7 @@ public class GameManager : MonoBehaviour
         StartingScreen = true;
         GameStart = false;
         GameOver = false;
+        ChangeLevel = false;
         OnScreenStart?.Invoke();
     }
 

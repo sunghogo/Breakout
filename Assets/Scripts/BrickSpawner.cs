@@ -6,12 +6,25 @@ public class BrickSpawner : MonoBehaviour
     [SerializeField] GameObject brickPrefab;
 
     [Header("Properties")]
-    [SerializeField] int rows = 3;
+    [SerializeField] int startingRows = 3;
+    [SerializeField] int maxRows = 8;
     [SerializeField] float gapWidth = 0.25f;
     [SerializeField, Range(0, 1f)] float startingYScale = 0.8f;
     [SerializeField, Range(0, 1f)] float startingXScale = 0.95f;
     [SerializeField, Range(0, 1f)] float brickSaturation = 0.75f;
     [SerializeField, Range(0, 1f)] float brickValue = 0.9f;
+    int rows;
+
+    
+    void IncrementRows()
+    {
+        rows = Mathf.Min(maxRows, rows + 1);
+    }
+
+    void ResetRows()
+    {
+        rows = startingRows;
+    }
 
     void SpawnBricks()
     {
@@ -58,11 +71,26 @@ public class BrickSpawner : MonoBehaviour
 
     void Awake()
     {
-        GameManager.OnGameStart += SpawnBricks;
+        ResetRows();
+        GameManager.OnGameStart += HandleGameStart;
+        GameManager.OnNextLevel += HandleNextLevel;
     }
 
     void OnDestroy()
     {
-        GameManager.OnGameStart -= SpawnBricks;
+        GameManager.OnGameStart -= HandleGameStart;
+        GameManager.OnNextLevel -= HandleNextLevel;
+    }
+
+    void HandleGameStart()
+    {
+        ResetRows();
+        SpawnBricks();
+    }
+
+    void HandleNextLevel()
+    {
+        IncrementRows();
+        SpawnBricks();
     }
 }

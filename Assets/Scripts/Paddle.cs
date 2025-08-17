@@ -36,7 +36,7 @@ public class Paddle : MonoBehaviour
         if (!GameManager.Instance.GameStart) return;
 
         ProcessInput();
-        transform.Translate(Direction * speed * Time.deltaTime);
+        transform.Translate(Direction * speed * Time.fixedDeltaTime, Space.World);
     }
     
     void Hide()

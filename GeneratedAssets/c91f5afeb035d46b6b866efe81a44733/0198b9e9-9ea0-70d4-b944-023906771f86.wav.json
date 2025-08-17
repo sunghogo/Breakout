@@ -1,0 +1,13 @@
+{
+    "asset": "c91f5afeb035d46b6b866efe81a44733",
+    "fileName": "0198b9e9-9ea0-70d4-b944-023906771f86.wav",
+    "prompt": "breakout, electronic, futuristic, single sound, breaking, reverb, arcade, retro, bit",
+    "negativePrompt": "noise, distorted, loud",
+    "model": "0ee39b33-2893-4e0f-8c46-0e0bdd4eda85",
+    "modelName": "Text to Sound",
+    "customSeed": -1,
+    "w3CTraceId": "8b40ecc5ea88f9db9c63f8f679bd384a",
+    "duration": 1.0,
+    "autoTrim": true,
+    "hasReference": false
+}

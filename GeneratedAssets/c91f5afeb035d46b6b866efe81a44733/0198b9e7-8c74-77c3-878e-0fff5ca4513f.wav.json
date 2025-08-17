@@ -1,0 +1,13 @@
+{
+    "asset": "c91f5afeb035d46b6b866efe81a44733",
+    "fileName": "0198b9e7-8c74-77c3-878e-0fff5ca4513f.wav",
+    "prompt": "breakout, electronic, futuristic, break",
+    "negativePrompt": "noise, distorted, loud",
+    "model": "0ee39b33-2893-4e0f-8c46-0e0bdd4eda85",
+    "modelName": "Text to Sound",
+    "customSeed": -1,
+    "w3CTraceId": "da0ec5eaaf60cda42222869f00eb2545",
+    "duration": 5.0,
+    "autoTrim": true,
+    "hasReference": false
+}

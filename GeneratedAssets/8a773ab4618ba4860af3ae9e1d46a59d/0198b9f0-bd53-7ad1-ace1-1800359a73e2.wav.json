@@ -1,0 +1,13 @@
+{
+    "asset": "8a773ab4618ba4860af3ae9e1d46a59d",
+    "fileName": "0198b9f0-bd53-7ad1-ace1-1800359a73e2.wav",
+    "prompt": "arcade, 8-bit, electronic, retro, crack, single sound, brick, break, breakout",
+    "negativePrompt": "noise, loud, reverb",
+    "model": "0ee39b33-2893-4e0f-8c46-0e0bdd4eda85",
+    "modelName": "Text to Sound",
+    "customSeed": -1,
+    "w3CTraceId": "0d0d82d9f22a5c02ad159953a9e478ff",
+    "duration": 1.0,
+    "autoTrim": true,
+    "hasReference": false
+}

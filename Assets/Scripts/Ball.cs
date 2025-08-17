@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    [Header("Refs")]
+    [SerializeField] AudioClip breakingClip;
+
     [Header("Properties")]
     [SerializeField] float startingSpeed = 7.5f;
     [SerializeField] float maxPaddleReflection = 60f;
@@ -11,6 +14,7 @@ public class Ball : MonoBehaviour
     [field: SerializeField] public Vector2 Direction { get; private set; }
     Rigidbody2D rb;
     SpriteRenderer sr;
+    AudioSource audioSource;
     Vector3 startingPosition;
     float brickRatio;
 
@@ -21,7 +25,7 @@ public class Ball : MonoBehaviour
         Direction = new Vector2(randomX, randomY).normalized;
     }
 
-    void ResetPosition()
+    void ResetPositionDirection()
     {
         transform.position = startingPosition;
         SetRandomDirection();
@@ -95,7 +99,7 @@ public class Ball : MonoBehaviour
         {
             Direction = PaddleReflect(collision).normalized;
         }
-        else
+        else if (collision.gameObject.CompareTag("Obstacle"))
         {
             Direction = ObstacleReflect(Direction, normal).normalized;
         }
@@ -106,7 +110,7 @@ public class Ball : MonoBehaviour
         if (collision.CompareTag("Bottom"))
         {
             GameManager.Instance.DecrementLives();
-            ResetPosition();
+            ResetPositionDirection();
         }
     }
 
@@ -116,6 +120,9 @@ public class Ball : MonoBehaviour
         Speed = startingSpeed;
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = 0.75f;
+
         rb.gravityScale = 0f;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         SetRandomDirection();
@@ -134,22 +141,29 @@ public class Ball : MonoBehaviour
         GameManager.OnGameOver -= Hide;
     }
 
+    void Start()
+    {
+        brickRatio = 1f;
+        ResetPositionDirection();
+        ResetSpeed();
+        if (GameManager.Instance.ChangeLevel) audioSource.PlayOneShot(breakingClip);
+    }
+
     void FixedUpdate()
     {
         if (!GameManager.Instance.GameStart) return;
 
-        transform.Translate(Direction * Speed * Time.deltaTime);
+        transform.Translate(Direction * Speed * Time.fixedDeltaTime, Space.World);
     }
 
-    void HandleCreatedBricks()
+    void HandleCreatedBricks() // Need to respawn ball due to unfixable Direction starting downward on resetting 
     {
-        brickRatio = 1f;
-        ResetPosition();
-        ResetSpeed();
+        Destroy(gameObject);
     }
 
     void HandleDestroyedBrick()
     {
+        audioSource.PlayOneShot(breakingClip);
         brickRatio = GameManager.Instance.currentBricks / GameManager.Instance.totalBricks;
         float multiplier = Mathf.Lerp(1f, 0.5f, brickRatio);
         Speed = startingSpeed * speedUpScale * multiplier;
