@@ -11,6 +11,7 @@ TagManager:
   - Score
   - High Score
   - Lives
+  - Brick
   layers:
   - Default
   - TransparentFX

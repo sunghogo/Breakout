@@ -31,12 +31,12 @@ public class Paddle : MonoBehaviour
         rb.gravityScale = 0f;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (!GameManager.Instance.GameStart) return;
 
         ProcessInput();
-        transform.Translate(Direction * speed * Time.fixedDeltaTime, Space.World);
+        transform.Translate(Direction * speed * Time.deltaTime, Space.World);
     }
     
     void Hide()

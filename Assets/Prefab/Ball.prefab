@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2, z: -1}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -111,8 +111,10 @@ MonoBehaviour:
   maxPaddleReflection: 60
   minObstacleReflection: 30
   speedUpScale: 2.5
+  breakCooldown: 0.02
   <Speed>k__BackingField: 0
   <Direction>k__BackingField: {x: 0, y: 0}
+  <CanBreak>k__BackingField: 1
 --- !u!50 &5221496710734894171
 Rigidbody2D:
   serializedVersion: 5

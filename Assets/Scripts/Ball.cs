@@ -10,13 +10,20 @@ public class Ball : MonoBehaviour
     [SerializeField] float maxPaddleReflection = 60f;
     [SerializeField] float minObstacleReflection = 30f;
     [SerializeField] float speedUpScale = 2f;
+    [SerializeField, Range(0f, 1f)] float breakCooldown = 0.02f;
+    [SerializeField, Range(0f, 1f)] float obstacleCooldown = 0.05f;
     [field: SerializeField] public float Speed { get; private set; }
     [field: SerializeField] public Vector2 Direction { get; private set; }
+    [field: SerializeField] public bool CanBreak { get; private set; } = true;
+    [field: SerializeField] public bool CanWallBounce { get; private set; } = true;
     Rigidbody2D rb;
     SpriteRenderer sr;
     AudioSource audioSource;
     Vector3 startingPosition;
     float brickRatio;
+    float breakTimer = 0f;
+    float obstacleTimer = 0f;
+
 
     void SetRandomDirection()
     {
@@ -101,8 +108,19 @@ public class Ball : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
+            if (CanWallBounce)
+            {
+                CanWallBounce = false;
+                CanBreak = true;
+                Direction = ObstacleReflect(Direction, normal).normalized;
+            }
+        }
+        else if (collision.gameObject.CompareTag("Brick"))
+        {
+            CanWallBounce = true;
             Direction = ObstacleReflect(Direction, normal).normalized;
         }
+        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -149,11 +167,14 @@ public class Ball : MonoBehaviour
         if (GameManager.Instance.ChangeLevel) audioSource.PlayOneShot(breakingClip);
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (!GameManager.Instance.GameStart) return;
-
-        transform.Translate(Direction * Speed * Time.fixedDeltaTime, Space.World);
+        if (breakTimer <= 0f) CanBreak = true;
+        if (obstacleTimer <= 0f) CanWallBounce = true;
+        breakTimer = Mathf.Max(0f, breakTimer - Time.deltaTime);
+        obstacleTimer = Mathf.Max(0f, obstacleTimer - Time.deltaTime);
+        transform.Translate(Direction * Speed * Time.deltaTime, Space.World);
     }
 
     void HandleCreatedBricks() // Need to respawn ball due to unfixable Direction starting downward on resetting 
@@ -163,6 +184,8 @@ public class Ball : MonoBehaviour
 
     void HandleDestroyedBrick()
     {
+        CanBreak = false;
+        breakTimer = breakCooldown;
         audioSource.PlayOneShot(breakingClip);
         brickRatio = GameManager.Instance.currentBricks / GameManager.Instance.totalBricks;
         float multiplier = Mathf.Lerp(1f, 0.5f, brickRatio);
